@@ -12,7 +12,6 @@ export default class Map extends Component {
       super(props)
   }
   state={
-      device:"Phone",
       GPS:[],
       meanGPS:[],
       medianGPS:[],
@@ -36,11 +35,16 @@ export default class Map extends Component {
       }
       this.setState({GPS:GP});
       this.setState({Phone:PH});
+  }
 
-      this.getMeanGPS();
-      this.getMeanPhone();
-      this.getMedianGPS();
-      this.getMedianPhone();
+  loadData = () => {
+    console.log("load")
+    this.getMeanGPS();
+    //this.getMeanPhone();
+    this.getMedianGPS();
+    //this.getMedianPhone();
+    console.log("GPSMean",this.state.meanGPS.length)
+    console.log("GPSMedian",this.state.medianGPS.length)
   }
 
   getMeanGPS = () => {
@@ -55,6 +59,7 @@ export default class Map extends Component {
           latSum += parseFloat(item.latitude);
           longSum += parseFloat(item.longitude);
         });
+        console.log("GPSmean: ",temp.length)
         final.push({latitude: (latSum/5), longitude: (longSum/5)})
         temp.shift();
         temp.push(item)
@@ -74,6 +79,7 @@ export default class Map extends Component {
           strokeWidth={2}
         />
       )*/
+      console.log(this.state.GPS.length)
   }
 
   getMedianGPS = () => {
@@ -176,20 +182,15 @@ export default class Map extends Component {
       }
     
   render() {
-    if(this.state.device == "Phone"){
+    console.log(this.state.GPS.length)
     return (
       <View style={styles.container}>
-        <View stye={styles.buttons}>
-          <Button 
-            onPress={this.setState({device: "GPS"})}
-            title="GPS data"
-          />
-          <Button 
-            onPress={this.setState({device: "Phone"})}
-            title="Phone data"
-          />
+        <View>
+        <Button
+        onPress={this.loadData}
+        title="Load data"
+      />
         </View>
-        
         <MapView style={styles.mapStyle}>
           <Polyline
             coordinates={this.state.GPS}
@@ -197,41 +198,7 @@ export default class Map extends Component {
             strokeColors={[
               '#7F0000'
             ]}
-            strokeWidth={4}
-          />
-          <Polyline
-            coordinates={this.state.Phone}
-            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-            strokeColors={[
-              '#022278'
-            ]}
-            strokeWidth={2}
-          />
-        </MapView>
-      </View>
-    );
-  } else if(this.state.device === "GPS") {
-    return (
-      <View style={styles.container}>
-        <View stye={styles.buttons}>
-          <Button 
-            onPress={this.setState({device: "GPS"})}
-            title="GPS data"
-          />
-          <Button 
-            onPress={this.setState({device: "Phone"})}
-            title="Phone data"
-          />
-        </View>
-        
-        <MapView style={styles.mapStyle}>
-          <Polyline
-            coordinates={this.state.GPS}
-            strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
-            strokeColors={[
-              '#7F0000'
-            ]}
-            strokeWidth={4}
+            strokeWidth={6}
           />
           <Polyline
             coordinates={this.state.meanGPS}
@@ -239,22 +206,22 @@ export default class Map extends Component {
             strokeColors={[
               '#022278'
             ]}
-            strokeWidth={2}
+            strokeWidth={3}
           />
           <Polyline
             coordinates={this.state.medianGPS}
             strokeColor="#000" // fallback for when `strokeColors` is not supported by the map-provider
             strokeColors={[
-              '#022278'
+              '#09e042'
             ]}
-            strokeWidth={2}
+            strokeWidth={1}
           />
         </MapView>
       </View>
     );
   }
   }
-}
+
 
 const styles = StyleSheet.create({
   container: {
@@ -265,10 +232,6 @@ const styles = StyleSheet.create({
   },
   mapStyle: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height -140,
+    height: Dimensions.get('window').height-100,
   },
-  buttons:{
-    flexDirection:'row',
-    justifyContent: 'space-between',
-  }
 });
