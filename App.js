@@ -3,10 +3,11 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import MapScreen from './components/Screens/Map'
+import EvergyMap from './components/Screens/EnergyMap';
 
 export default function App() {
   return (
-   <MapScreen />
+   <EvergyMap />
   );
 }
 
